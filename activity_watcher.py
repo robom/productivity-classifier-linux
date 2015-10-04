@@ -11,8 +11,11 @@ class ActivityWatcher(object):
         self.root = self.display.screen().root
         self.root.change_attributes(event_mask=Xlib.X.FocusChangeMask)
         self.active_pid = -1
+        self.active_app = None
+        self.apps = {}
 
     def watch(self):
+        # KeyEvents(self.key_changed_event).start()
         while True:
             try:
                 window_id = self.root.get_full_property(self.NET_ACTIVE_WINDOW, Xlib.X.AnyPropertyType).value[0]
@@ -28,9 +31,19 @@ class ActivityWatcher(object):
         t.start()
 
     def app_change_event(self, window):
-        pid = window.get_full_property(self.NET_WM_NAME, 0).value
+        pid = window.get_full_property(self.NET_WM_PID, 0).value[0]
         if self.active_pid != pid:
-            self.active_pid = pid
+            if self.active_app:
+                self.active_app.switch_out()
 
+            self.active_pid = pid
             name = window.get_full_property(self.NET_WM_NAME, 0).value
-            print(name)
+
+            if not self.apps.get(pid):
+                self.apps[pid] = Application(pid, name)
+
+            self.active_app = self.apps[pid]
+            self.active_app.switch_into()
+
+    def key_changed_event(self):
+        self.active_app.ping()
