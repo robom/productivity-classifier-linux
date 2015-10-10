@@ -1,4 +1,4 @@
-from dependencies import *
+from logger.dependencies import *
 
 
 class ActivityWatcher(object):
@@ -53,12 +53,3 @@ class ActivityWatcher(object):
 
     def key_changed_event(self):
         self.active_app.ping()
-
-    @staticmethod
-    def send_to_server(url, params):
-        headers = {"Authorization": Config.session_key_header()}
-        request = requests.post(url, params, headers=headers)
-        if request.status_code == 401:
-            Config.delete_session_key()
-            LoginGui.show_login()
-            ActivityWatcher().start()

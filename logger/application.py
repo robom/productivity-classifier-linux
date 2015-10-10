@@ -1,4 +1,4 @@
-from dependencies import *
+from logger.dependencies import *
 
 
 class Application(object):
@@ -72,5 +72,3 @@ class Application(object):
             "app_type": "unix"
         })
 
-
-from dependencies import *

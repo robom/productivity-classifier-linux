@@ -1,4 +1,4 @@
-from dependencies import *
+from logger.dependencies import *
 
 
 class ServerCommunicator(object):

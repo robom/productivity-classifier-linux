@@ -4,7 +4,7 @@ from tkinter import Frame
 from tkinter import StringVar
 from tkinter import Button
 from tkinter import E
-from dependencies import *
+from logger.dependencies import *
 
 
 class LoginGui(object):
