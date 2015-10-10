@@ -4,13 +4,12 @@ from tkinter import Frame
 from tkinter import StringVar
 from tkinter import Button
 from tkinter import E
-
 from dependencies import *
 
 
 class LoginGui(object):
     def __init__(self, root):
-        self.welcome_text = 'Prihlaseny' if User.is_loaded_session() else "Tu bude vysledok"
+        self.welcome_text = 'Prihlaseny' if User.is_loaded_session() else ""
 
         self.response_text = StringVar(root, value=self.welcome_text)
 
@@ -44,12 +43,21 @@ class LoginGui(object):
         self.l_sign_up.bind('<Button-1>', self.sing_up_callback)
         self.b_submit.bind('<Button-1>', self.login)
 
-        root.mainloop()
+        self.root = root
+        self.root.mainloop()
 
     def login(self, event):
         response = User.login(self.e_email.get(), self.e_pass.get())
         self.response_text.set(response)
+        if User.is_loaded_session():
+            self.root.destroy()
 
     @staticmethod
     def sing_up_callback(event):
         webbrowser.open_new(Config.SIGN_UP_URL)
+
+    @staticmethod
+    def show_login():
+        root = tkinter.Tk(className="Productivity optimizer")
+        LoginGui(root)
+        root.mainloop()
