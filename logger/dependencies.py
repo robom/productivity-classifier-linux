@@ -12,11 +12,11 @@ if any(platform.win32_ver()):
     from ctypes import windll, CFUNCTYPE, POINTER, c_int, c_void_p, byref
     import pyHook
     import pythoncom
-
 else:
     import Xlib
     import Xlib.display
     import psutil
+
 from collections import namedtuple
 import configparser
 from os.path import expanduser
