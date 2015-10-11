@@ -51,7 +51,7 @@ class ActivityWatcher(object):
             'SetWinEventHook failed'
 
         msg = ctypes.wintypes.MSG()
-        while self.user32.GetMessageW(ctypes.byref(msg), 0, 0, 0) != 0:
+        while User.is_loaded_session() and self.user32.GetMessageW(ctypes.byref(msg), 0, 0, 0) != 0:
             self.user32.TranslateMessage(msg)
             self.user32.DispatchMessageW(msg)
 
