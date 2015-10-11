@@ -8,6 +8,7 @@ class KeyEvents(object):
         self.local_dpy = display.Display()
         self.record_dpy = display.Display()
         self.key_pressed_callback = key_pressed_callback
+        self.exit_flag = True
 
     def record_callback(self, reply):
         if reply.category != record.FromServer:

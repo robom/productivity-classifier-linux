@@ -3,8 +3,12 @@ from logger.dependencies import *
 
 def main():
     while True:
-        ActivityWatcher().watch()
+        aw = ActivityWatcher()
+        aw.watch()
+        aw.end_keylog()
         LoginGui.show_login()
+        if not User.is_loaded_session():
+            return
 
 
 if __name__ == "__main__":
