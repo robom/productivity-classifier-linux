@@ -2,9 +2,9 @@ import tkinter
 import platform
 
 if any(platform.win32_ver()):
-    from win32 import win32api
-    from win32 import win32gui
-    from win32 import win32process
+    import win32api
+    import win32gui
+    import win32process
     import win32con
     import atexit
     import ctypes
