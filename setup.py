@@ -1,12 +1,15 @@
 from setuptools import setup, find_packages
+import shutil
+import os
+import stat
 
 setup(
     name='unix-productivity-logger',
-    version='1.0',
+    version='1.3.0',
     packages=find_packages(),
     entry_points={
         'console_scripts': [
-            'linuxlogger3 = logger.__main__:main'
+            'unix-productivity-logger = logger.__main__:main'
         ],
     },
     url='',
@@ -19,3 +22,6 @@ setup(
         "python3-xlib"
     ],
 )
+
+# sudo cp productivity-logger /etc/init.d/productivity-logger
+# sudo chmod +x /etc/init.d/productivity-logger

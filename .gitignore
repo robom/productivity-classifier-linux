@@ -18,6 +18,8 @@ eggs/
 lib/
 lib64/
 parts/
+/dist
+/deb_dist
 sdist/
 var/
 *.egg-info/
