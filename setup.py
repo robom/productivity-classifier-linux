@@ -17,7 +17,7 @@ else:
 
 setup(
     name='unix-productivity-logger',
-    version='1.3.0',
+    version='1.3.4',
     packages=find_packages(),
     entry_points={
         'console_scripts': [
@@ -34,5 +34,16 @@ setup(
 
 
 
+# python3 setup.py --command-packages=stdeb.command bdist_deb
+# cp productivity-logger deb_dist/unix-productivity-logger-
+# cd deb_dist/unix-productivity-logger-
+# add to rules:
 # sudo cp productivity-logger /etc/init.d/productivity-logger
 # sudo chmod +x /etc/init.d/productivity-logger
+# dpkg-source --commit
+# sudo dpkg-buildpackage -rfakeroot -uc -us
+# sudo apt-get remove python3-unix-productivity-logger
+# cd ..
+# sudo dpkg -i python3-unix-productivity-logger_
+# https://pypi.python.org/pypi/stdeb/0.8.5
+# sudo python3 setup.py install --record files.txt

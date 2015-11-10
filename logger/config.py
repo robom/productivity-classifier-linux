@@ -2,7 +2,7 @@ from logger.dependencies import *
 
 
 class Config(object):
-    RAILS_ROOT = 'http://localhost:3009'
+    RAILS_ROOT = 'http://vnenk.com'
     API_URL = RAILS_ROOT + '/extension_api'
     LOGIN_URL = RAILS_ROOT + "/oauth/token.json"
     SIGN_UP_URL = RAILS_ROOT + '/users/sign_up'

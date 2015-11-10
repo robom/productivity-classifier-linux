@@ -1,0 +1,12 @@
+Source: unix-productivity-logger
+Maintainer: lubomir.vnenk <lubomir.vnenk@zoho.com>
+Section: python
+Priority: optional
+Build-Depends: python-setuptools (>= 0.6b3), python-all (>= 2.6.6-3), debhelper (>= 9)
+Standards-Version: 3.9.1
+
+Package: python-unix-productivity-logger
+Architecture: all
+Depends: ${misc:Depends}, ${python:Depends}
+Description: UNKNOWN
+

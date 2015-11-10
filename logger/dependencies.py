@@ -16,10 +16,12 @@ else:
     import Xlib
     import Xlib.display
     import psutil
+    import pwd
 
 from collections import namedtuple
 import configparser
 from os.path import expanduser
+import os
 import requests
 import webbrowser
 import threading

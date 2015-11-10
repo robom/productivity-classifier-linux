@@ -5,8 +5,8 @@ from Xlib.protocol import rq
 
 class KeyEvents(object):
     def __init__(self, key_pressed_callback):
-        self.local_dpy = display.Display()
-        self.record_dpy = display.Display()
+        self.local_dpy = display.Display(':0')
+        self.record_dpy = display.Display(':0')
         self.key_pressed_callback = key_pressed_callback
         self.exit_flag = True
 
