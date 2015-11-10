@@ -2,7 +2,10 @@ from logger.dependencies import *
 
 
 class ActivityWatcher(object):
-    display = Xlib.display.Display()
+    if 'HOME' not in os.environ:
+        os.environ['HOME'] = expanduser("~")
+    # os.environ['HOME'] = pwd.getpwuid(os.getuid()).pw_dir
+    display = Xlib.display.Display(":0")
     NET_WM_NAME = display.intern_atom('_NET_WM_NAME')
     NET_WM_PID = display.intern_atom('_NET_WM_PID')
     NET_ACTIVE_WINDOW = display.intern_atom('_NET_ACTIVE_WINDOW')

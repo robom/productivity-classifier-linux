@@ -8,6 +8,8 @@ import webbrowser
 import threading
 import time
 import psutil
+import os
+import pwd
 
 from logger.config import Config
 from logger.stopwatch import Stopwatch
