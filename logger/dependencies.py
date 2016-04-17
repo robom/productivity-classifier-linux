@@ -1,44 +1,32 @@
-import tkinter
-import platform
+import win32api
+import win32gui
+import win32process
+import win32con
+import atexit
+import ctypes
+import ctypes.wintypes
+from ctypes import windll, CFUNCTYPE, POINTER, c_int, c_void_p, byref
+import pyHook
+import pythoncom
 
-if any(platform.win32_ver()):
-    import win32api
-    import win32gui
-    import win32process
-    import win32con
-    import atexit
-    import ctypes
-    import ctypes.wintypes
-    from ctypes import windll, CFUNCTYPE, POINTER, c_int, c_void_p, byref
-    import pyHook
-    import pythoncom
-else:
-    import Xlib
-    import Xlib.display
-    import psutil
-    import pwd
-
+import Tkinter
 from collections import namedtuple
-import configparser
+import ConfigParser
 from os.path import expanduser
 import os
 import requests
 import webbrowser
 import threading
+import timeit
 import time
+from datetime import datetime
+import logging
 
 from logger.config import Config
 from logger.stopwatch import Stopwatch
-if any(platform.win32_ver()):
-    from logger.key_events_windows import KeyEvents
-else:
-    from logger.key_events import KeyEvents
-from logger.user import User
-from logger.login_gui import LoginGui
+from logger.key_events_windows import KeyEvents
 from logger.server_communicator import ServerCommunicator
 from logger.application import Application
-
-if any(platform.win32_ver()):
-    from logger.activity_watcher_windows import ActivityWatcher
-else:
-    from logger.activity_watcher import ActivityWatcher
+from logger.activity_watcher_windows import ActivityWatcher
+from watcher_view import WatcherView
+from watcher_controller import WatcherController

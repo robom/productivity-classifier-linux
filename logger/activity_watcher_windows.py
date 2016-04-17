@@ -19,50 +19,63 @@ class ActivityWatcher(object):
     def __init__(self):
         self.active_pid = -1
         self.active_app = None
-        self.keylog = KeyEvents(self.key_changed_event)
-        self.keylog_thread = threading.Thread(target=self.keylog.start)
         self.apps = {}
-        self.hook_id = None
-        self.exit_flag = True
+
+        self.runner = None
+
+        self.keylog = None
+        self.keylog_thread = None
+
+        self.hook = None
         self.user32 = ctypes.windll.user32
         self.ole32 = ctypes.windll.ole32
         self.ole32.CoInitialize(0)
 
-    def end_keylog(self):
-        self.keylog.exit_flag = False
+    def init_runner_thread(self):
+        return threading.Thread(target=self.watch, name="activity_watcher")
+
+    def init_key_logging(self):
+        self.keylog = KeyEvents(self.key_changed_event)
+        self.keylog_thread = threading.Thread(target=self.keylog.start, name="key_logger")
+        self.keylog_thread.setDaemon(True)
 
     def watch(self):
         self.keylog_thread.start()
 
-        WinEventProc = WinEventProcType(self.app_change_event)
+        win_event_proc = WinEventProcType(self.app_change_event)
 
         self.user32.SetWinEventHook.restype = ctypes.wintypes.HANDLE
-        hook = self.user32.SetWinEventHook(
+        self.hook = self.user32.SetWinEventHook(
             self.EVENT_FOCUS_OUT,
             self.EVENT_FOCUS_OUT,
             0,
-            WinEventProc,
+            win_event_proc,
             0,
             0,
             self.WINEVENT_OUTOFCONTEXT
         )
-        if hook == 0:
-            print
-            'SetWinEventHook failed'
+
+        if self.hook == 0:
+            logging.error('SetWinEventHook failed')
 
         msg = ctypes.wintypes.MSG()
-        while User.is_loaded_session() and self.user32.GetMessageW(ctypes.byref(msg), 0, 0, 0) != 0:
+        while self.user32.GetMessageW(ctypes.byref(msg), 0, 0, 0) > 0:
             self.user32.TranslateMessage(msg)
             self.user32.DispatchMessageW(msg)
 
-        self.user32.UnhookWinEvent(hook)
+        self.user32.UnhookWinEvent(self.hook)
         self.ole32.CoUninitialize()
 
-    def callback(self, hWinEventHook, event, hwnd, idObject, idChild, dwEventThread, dwmsEventTime):
-        length = self.user32.GetWindowTextLengthA(hwnd)
-        buff = ctypes.create_string_buffer(length + 1)
-        self.user32.GetWindowTextA(hwnd, buff, length + 1)
-        print(buff.value)
+        self.keylog.stop()
+
+    def start(self):
+        self.runner = self.init_runner_thread()
+        self.init_key_logging()
+
+        self.runner.start()
+
+    def stop(self):
+        win32api.PostThreadMessage(self.runner.ident, win32con.WM_QUIT, 0, 0)
 
     def app_change_event(self, hWinEventHook, event, hwnd, idObject, idChild, dwEventThread, dwmsEventTime):
         pid = win32process.GetWindowThreadProcessId(hwnd)[1]
@@ -71,24 +84,30 @@ class ActivityWatcher(object):
             buff = ctypes.create_string_buffer(length + 1)
             self.user32.GetWindowTextA(hwnd, buff, length + 1)
 
-            if length <=1: return
+            if length <= 1:
+                return
 
             if self.active_app:
                 self.active_app.switch_out()
 
             name = buff.value
 
-            handle = win32api.OpenProcess(win32con.PROCESS_ALL_ACCESS, False, pid)
-            url = win32process.GetModuleFileNameEx(handle, 0)
+            try:
+                handle = win32api.OpenProcess(win32con.PROCESS_ALL_ACCESS, False, pid)
+            except Exception as e:
+                logging.error(e)
+                raise e
+
+            path = win32process.GetModuleFileNameEx(handle, 0)
 
             if self.apps.get(pid):
                 self.apps[pid].switch_into(self.active_pid)
             else:
-                self.apps[pid] = Application(pid, name, url)
+                self.apps[pid] = Application(pid, name, path)
 
             self.active_app = self.apps[pid]
             self.active_pid = pid
 
     def key_changed_event(self, event):
-        print('aaa')
-        self.active_app.ping()
+        if self.active_app:
+            self.active_app.ping()

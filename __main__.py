@@ -1,5 +1,12 @@
-from dependencies import *
+from logger.dependencies import *
 
-while True:
-    ActivityWatcher().watch()
-    LoginGui.show_login()
+
+def main():
+    logging.basicConfig(filename='activity_watcher.log', level=logging.ERROR,
+                        format='%(asctime)s %(levelname)s: %(message)s')
+
+    WatcherController().run()
+
+
+if __name__ == "__main__":
+    main()
