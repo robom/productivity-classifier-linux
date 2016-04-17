@@ -1,1 +1,1 @@
-pyinstaller --noconfirm --log-level=WARN activity_watcher.spec
+pyinstaller --noconfirm --log-level=WARN --onefile activity_watcher.spec
