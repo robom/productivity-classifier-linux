@@ -95,12 +95,12 @@ class ActivityWatcher(object):
                 logging.error(e)
                 raise e
 
-            url = win32process.GetModuleFileNameEx(handle, 0)
+            path = win32process.GetModuleFileNameEx(handle, 0)
 
             if self.apps.get(pid):
                 self.apps[pid].switch_into(self.active_pid)
             else:
-                self.apps[pid] = Application(pid, name, url)
+                self.apps[pid] = Application(pid, name, path)
 
             self.active_app = self.apps[pid]
             self.active_pid = pid

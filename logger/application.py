@@ -2,59 +2,54 @@ from logger.dependencies import *
 
 
 class Application(object):
-    def __init__(self, pid, name, url):
+    def __init__(self, pid, name, path):
         self.pid = pid
         self.name = name
         self.stopwatch = Stopwatch()
         self.stopwatch.start()
-        self.send_active_thread = None
-        self.send_inactive_thread = None
         self.really_active = True
         self.key_pressed = 0
         self.previous_active_pid = None
-        self.url = url
-        threading.Timer(4, self.send_app_start, [self.start_state()]).start()
+        self.path = path
+
+        self.send_app_start()
 
     def switch_into(self, previous_active_pid):
         self.stopwatch.start()
         self.previous_active_pid = previous_active_pid
-        if self.send_inactive_thread is not None:
-            self.send_inactive_thread.cancel()
-        self.send_active_thread = threading.Timer(4, self.send_active, [self.switch_out_state()])
-        self.send_active_thread.start()
+        self.send_active(self.switch_out_state())
 
     def send_active(self, params):
         if not self.really_active:
             self.really_active = True
-            ServerCommunicator.send(Config.API_URL + '/active_pages/tab_change.json', params)
+            ServerCommunicator.send('app_got_focus', params)
 
     def switch_out(self):
         self.stopwatch.stop()
-        if self.send_active_thread is not None: self.send_active_thread.cancel()
-        self.send_inactive_thread = threading.Timer(4, self.send_inactive, [self.current_state()])
-        self.send_inactive_thread.start()
+        self.send_inactive(self.current_state())
 
     def send_inactive(self, params):
         if self.really_active:
             self.really_active = False
-            ServerCommunicator.send(Config.API_URL + '/active_pages/page_lost_focus.json', params)
-            self.reset_attrs()
+            ServerCommunicator.send('app_lost_focus', params)
+            self.reset_attributes()
 
     def current_state(self):
         return {
+            'path': self.name,
+            'pid': self.pid,
             'active_length': self.stopwatch.elapsed,
-            'url': self.name,
-            'key_pressed': self.key_pressed,
-            'tab_id': self.pid
+            'key_pressed': self.key_pressed
         }
 
     def switch_out_state(self):
         return {
-            'tab_id': self.pid,
-            'previous_tab_id': self.previous_active_pid
+            'path': self.path,
+            'pid': self.pid,
+            'previous_pid': self.previous_active_pid
         }
 
-    def reset_attrs(self):
+    def reset_attributes(self):
         self.key_pressed = 0
         self.stopwatch.reset()
 
@@ -62,14 +57,10 @@ class Application(object):
         self.key_pressed += 1
         self.stopwatch.ping()
 
-    def send_app_start(self, params):
-        ServerCommunicator.send(Config.API_URL + '/active_pages/new_page.json', params)
-
-    def start_state(self):
-        return ({
-            "url": self.url,
-            "tab_id": self.pid,
-            "title": self.name,
-            "app_type": "windows"
+    def send_app_start(self):
+        ServerCommunicator.send('new_app_logged', {
+            'path': self.path,
+            'title': self.name,
+            'pid': self.pid,
+            'app_type': 'windows'
         })
-
