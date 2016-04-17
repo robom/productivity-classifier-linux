@@ -1,7 +1,6 @@
 from tkinter import Frame
 from tkinter import Button
 from tkinter import E
-from logger.dependencies import *
 
 
 class TrackerView(object):

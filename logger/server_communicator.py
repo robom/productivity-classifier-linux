@@ -3,13 +3,19 @@ from logger.dependencies import *
 
 class ServerCommunicator(object):
     @staticmethod
-    def send(url, params):
-        print(url)
-        print(params)
-        return
+    def send(message, params):
+        logging.debug(message)
+        logging.debug(params)
 
-        headers = {"Authorization": Config.session_key_header()}
-        request = requests.post(url, params, headers=headers)
-        if request.status_code == 401:
-            Config.delete_session_key()
+        try:
+            request = requests.post(url=Config.load_url(), data={
+                "Token": Config.load_token(),
+                "Value": str({'message': message, 'params': params}),
+                "ValidFrom": datetime.now().isoformat(' ')
+            })
+
+            if request.status_code >= 400:
+                logging.error("UXS responded with code %d: %s" % (request.status_code, request.reason))
+        except Exception as e:
+            logging.error(e)
 

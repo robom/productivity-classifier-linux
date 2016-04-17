@@ -2,16 +2,10 @@ from logger.dependencies import *
 
 
 def main():
-    logging.basicConfig(filename='error.log', level=logging.ERROR)
+    logging.basicConfig(filename='activity_watcher.log', level=logging.ERROR,
+                        format='%(asctime)s %(levelname)s: %(message)s')
 
     TrackerController().run()
-    # ActivityWatcher().watch()
-    # TrackerView.show()
-    # while True:
-        # aw = ActivityWatcher()
-        # aw.watch()
-        # aw.end_keylog()
-        # TrackerView.show()
 
 
 if __name__ == "__main__":
