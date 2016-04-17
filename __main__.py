@@ -5,7 +5,7 @@ def main():
     logging.basicConfig(filename='activity_watcher.log', level=logging.DEBUG,
                         format='%(asctime)s %(levelname)s: %(message)s')
 
-    TrackerController().run()
+    WatcherController().run()
 
 
 if __name__ == "__main__":

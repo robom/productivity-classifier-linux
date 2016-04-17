@@ -3,7 +3,7 @@ from Tkinter import Button
 from Tkinter import E
 
 
-class TrackerView(object):
+class WatcherView(object):
     def __init__(self, root):
         self.top_frame = Frame(root, width=250, height=100)
 

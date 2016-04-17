@@ -28,5 +28,5 @@ from logger.key_events_windows import KeyEvents
 from logger.server_communicator import ServerCommunicator
 from logger.application import Application
 from logger.activity_watcher_windows import ActivityWatcher
-from tracker_view import TrackerView
-from tracker_controller import TrackerController
+from watcher_view import WatcherView
+from watcher_controller import WatcherController
