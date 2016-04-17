@@ -18,7 +18,8 @@ class Application(object):
     def switch_into(self, previous_active_pid):
         self.stopwatch.start()
         self.previous_active_pid = previous_active_pid
-        if self.send_inactive_thread is not None: self.send_inactive_thread.cancel()
+        if self.send_inactive_thread is not None:
+            self.send_inactive_thread.cancel()
         self.send_active_thread = threading.Timer(4, self.send_active, [self.switch_out_state()])
         self.send_active_thread.start()
 
@@ -69,6 +70,6 @@ class Application(object):
             "url": self.url,
             "tab_id": self.pid,
             "title": self.name,
-            "app_type": "unix"
+            "app_type": "windows"
         })
 

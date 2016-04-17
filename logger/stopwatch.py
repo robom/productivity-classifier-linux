@@ -2,7 +2,8 @@ from logger.dependencies import *
 
 
 class Stopwatch:
-    def __init__(self, func=time.perf_counter):
+    # def __init__(self, func=time.perf_counter):
+    def __init__(self, func=timeit.default_timer):
         self.elapsed = 0.0
         self._func = func
         self._start = None

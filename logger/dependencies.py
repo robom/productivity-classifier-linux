@@ -18,14 +18,14 @@ import os
 import requests
 import webbrowser
 import threading
-import time
+import timeit
 
 from logger.config import Config
 from logger.stopwatch import Stopwatch
 from logger.key_events_windows import KeyEvents
 from logger.user import User
-from logger.login_gui import LoginGui
 from logger.server_communicator import ServerCommunicator
 from logger.application import Application
 from logger.activity_watcher_windows import ActivityWatcher
-
+from tracker_view import TrackerView
+from tracker_controller import TrackerController
