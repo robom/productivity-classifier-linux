@@ -19,6 +19,7 @@ import requests
 import webbrowser
 import threading
 import timeit
+import logging
 
 from logger.config import Config
 from logger.stopwatch import Stopwatch

@@ -35,8 +35,8 @@ class ActivityWatcher(object):
     def watch(self):
         self.keylog_thread.start()
 
-        # win_event_proc = WinEventProcType(self.app_change_event)
-        win_event_proc = WinEventProcType(self.callback)
+        win_event_proc = WinEventProcType(self.app_change_event)
+        # win_event_proc = WinEventProcType(self.callback)
 
         self.user32.SetWinEventHook.restype = ctypes.wintypes.HANDLE
         self.hook = self.user32.SetWinEventHook(
@@ -50,7 +50,7 @@ class ActivityWatcher(object):
         )
 
         if self.hook == 0:
-            print('SetWinEventHook failed')
+            logging.error('SetWinEventHook failed')
 
         msg = ctypes.wintypes.MSG()
         while self.user32.GetMessageW(ctypes.byref(msg), 0, 0, 0) > 0:
@@ -73,7 +73,6 @@ class ActivityWatcher(object):
         buff = ctypes.create_string_buffer(length + 1)
         self.user32.GetWindowTextA(hwnd, buff, length + 1)
         print(buff.value)
-        print(threading.enumerate())
 
     def app_change_event(self, hWinEventHook, event, hwnd, idObject, idChild, dwEventThread, dwmsEventTime):
         pid = win32process.GetWindowThreadProcessId(hwnd)[1]
@@ -90,7 +89,12 @@ class ActivityWatcher(object):
 
             name = buff.value
 
-            handle = win32api.OpenProcess(win32con.PROCESS_ALL_ACCESS, False, pid)
+            try:
+                handle = win32api.OpenProcess(win32con.PROCESS_ALL_ACCESS, False, pid)
+            except Exception as e:
+                logging.error(e)
+                raise e
+
             url = win32process.GetModuleFileNameEx(handle, 0)
 
             if self.apps.get(pid):
@@ -102,7 +106,5 @@ class ActivityWatcher(object):
             self.active_pid = pid
 
     def key_changed_event(self, event):
-        print('key_pressed: %s' % event.Key)
-
         if self.active_app:
             self.active_app.ping()

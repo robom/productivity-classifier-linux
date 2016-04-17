@@ -2,6 +2,8 @@ from logger.dependencies import *
 
 
 def main():
+    logging.basicConfig(filename='error.log', level=logging.ERROR)
+
     TrackerController().run()
     # ActivityWatcher().watch()
     # TrackerView.show()
