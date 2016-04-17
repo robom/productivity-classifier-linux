@@ -3,8 +3,7 @@ from logger.dependencies import *
 
 class Config(object):
     CONF_PATH = 'activity_watcher.ini'
-    config = configparser.ConfigParser()
-    # config._interpolation = ConfigParser.ExtendedInterpolation()
+    config = ConfigParser.ConfigParser()
     config.read(CONF_PATH)
 
     @staticmethod

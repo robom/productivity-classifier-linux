@@ -2,7 +2,7 @@ from logger.dependencies import *
 
 
 def main():
-    logging.basicConfig(filename='activity_watcher.log', level=logging.ERROR,
+    logging.basicConfig(filename='activity_watcher.log', level=logging.DEBUG,
                         format='%(asctime)s %(levelname)s: %(message)s')
 
     TrackerController().run()

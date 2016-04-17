@@ -1,11 +1,6 @@
 from logger.dependencies import *
 
 
-# KeyboardEvent = namedtuple('KeyboardEvent', ['event_type', 'key_code',
-#                                              'scan_code', 'alt_pressed',
-#                                              'time'])
-
-
 class KeyEvents(object):
     def __init__(self, key_pressed_callback):
         self.key_pressed_callback = key_pressed_callback

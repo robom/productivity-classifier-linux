@@ -1,6 +1,6 @@
-from tkinter import Frame
-from tkinter import Button
-from tkinter import E
+from Tkinter import Frame
+from Tkinter import Button
+from Tkinter import E
 
 
 class TrackerView(object):

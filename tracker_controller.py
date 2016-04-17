@@ -3,7 +3,7 @@ from logger.dependencies import *
 
 class TrackerController(object):
     def __init__(self):
-        self.root = tkinter.Tk()
+        self.root = Tkinter.Tk()
         self.model = ActivityWatcher()
         self.view = TrackerView(self.root)
         self.is_tracking = False

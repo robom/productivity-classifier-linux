@@ -21,22 +21,28 @@ class ActivityWatcher(object):
         self.active_app = None
         self.apps = {}
 
-        self.runner = threading.Thread(target=self.watch, name="activity_watcher")
+        self.runner = None
 
-        self.keylog = KeyEvents(self.key_changed_event)
-        self.keylog_thread = threading.Thread(target=self.keylog.start, name="key_logger")
-        self.keylog_thread.setDaemon(True)
+        self.keylog = None
+        self.keylog_thread = None
 
         self.hook = None
         self.user32 = ctypes.windll.user32
         self.ole32 = ctypes.windll.ole32
         self.ole32.CoInitialize(0)
 
+    def init_runner_thread(self):
+        return threading.Thread(target=self.watch, name="activity_watcher")
+
+    def init_key_logging(self):
+        self.keylog = KeyEvents(self.key_changed_event)
+        self.keylog_thread = threading.Thread(target=self.keylog.start, name="key_logger")
+        self.keylog_thread.setDaemon(True)
+
     def watch(self):
         self.keylog_thread.start()
 
         win_event_proc = WinEventProcType(self.app_change_event)
-        # win_event_proc = WinEventProcType(self.callback)
 
         self.user32.SetWinEventHook.restype = ctypes.wintypes.HANDLE
         self.hook = self.user32.SetWinEventHook(
@@ -63,16 +69,13 @@ class ActivityWatcher(object):
         self.keylog.stop()
 
     def start(self):
+        self.runner = self.init_runner_thread()
+        self.init_key_logging()
+
         self.runner.start()
 
     def stop(self):
         win32api.PostThreadMessage(self.runner.ident, win32con.WM_QUIT, 0, 0)
-
-    def callback(self, hWinEventHook, event, hwnd, idObject, idChild, dwEventThread, dwmsEventTime):
-        length = self.user32.GetWindowTextLengthA(hwnd)
-        buff = ctypes.create_string_buffer(length + 1)
-        self.user32.GetWindowTextA(hwnd, buff, length + 1)
-        print(buff.value)
 
     def app_change_event(self, hWinEventHook, event, hwnd, idObject, idChild, dwEventThread, dwmsEventTime):
         pid = win32process.GetWindowThreadProcessId(hwnd)[1]
