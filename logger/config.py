@@ -15,3 +15,8 @@ class Config(object):
     def load_token():
         return Config.config.get('UXLabClass', 'token') if Config.config.has_option(
             'UXLabClass', 'token') else None
+
+    @staticmethod
+    def load_logging_level():
+        return Config.config.get('Logging', 'level') if Config.config.has_option(
+            'Logging', 'level') else None
